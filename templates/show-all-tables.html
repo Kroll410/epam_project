@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %} Available Tables {% endblock %}
+
+{% block content %}
+
+<div class="jumbotron push-down-containers">
+    <h1 class="display-4">Hello, world!</h1>
+    <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to
+        featured content or information.</p>
+    <hr class="my-4">
+</div>
+
+
+<div class="container tables-preview">
+    {% for idx, table_info in data['info'] %}
+
+    <div class="card" id="{{ table_info[0] }}" style="width: 22rem;">
+        <div class="card-body">
+            <div class="table-name-with-delete-button">
+                <a href="{{ table_info[0] }}"><h5 class="card-title">{{ table_info[0] }}</h5></a>
+                <button type="button" class="btn btn-primary btn-sm" style="font-size: 14px;">Drop</button>
+            </div>
+            <p class="card-text">
+                Fields:
+            <ul>
+                {% for field in table_info[1] %}
+                <li>{{field}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    {% endfor %}
+</div>
+{% endblock %}

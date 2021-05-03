@@ -1,0 +1,91 @@
+.push-down-containers{
+    margin-bottom: 30px;
+}
+
+.row{
+    display: flex;
+}
+
+
+.tables-preview{
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+.table-name-with-delete-button{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+#new-row-label{
+    display: inline-block;
+    margin-right: 10px;
+    text-align: right;
+}
+
+
+.remove-button{
+  display: flex;
+  align-items: center;
+}
+
+#table-name{
+    width: 850px;
+}
+
+#fail-span{
+   display: inline-block;
+   margin-right: 10px;
+   text-align: right;
+   margin-left: 25px;
+}
+
+
+#success-span{
+   display: inline-block;
+   margin-right: 10px;
+   text-align: right;
+   margin-left: 25px;
+  -webkit-animation: seconds 1.0s forwards;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-delay: 3s;
+  animation: seconds 1.0s forwards;
+  animation-iteration-count: 1;
+  animation-delay: 3s;
+  position: relative;
+  background: #dcf7dc;
+}
+@-webkit-keyframes seconds {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    left: -9999px;
+  }
+}
+@keyframes seconds {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    left: -9999px;
+  }
+}
+
+.add-new-row {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #000000;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.add-new-row:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}

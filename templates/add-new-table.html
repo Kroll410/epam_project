@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %} Add New Table {% endblock %}
+
+{% block content %}
+
+<div class="push-down-containers">
+    <form method="POST">
+        <label for="table-name"><h2>Text table name here</h2></label>
+        <div class="push-down-containers">
+            <input class="form-control form-control-lg" type="text" placeholder="Table name"
+                   id="table-name" name="table-name" required>
+            <div class="form-text">
+                Use `_` symbol to separate multiple-word names
+            </div>
+        </div>
+
+        <div class="container" style="margin-bottom: 20px;">
+            <h4>Fields of table</h4>
+            <button type="button" class="btn btn-outline-primary" onclick="addFieldRow()">Add new field</button>
+        </div>
+
+
+        <div class="container push-down-containers" id="container">
+            <div class="row push-down-containers" id="row-1">
+                <div class="col-sm">
+                    <label for="field-name-1"><h5>Field name</h5></label>
+                    <input class="form-control form-control-lg " type="text" id="field-name-1" name="field-name-1"
+                           required>
+                    <div class="form-text">
+                        Note: date type should be type in format `MM-DD-YYYY`
+                        <br>
+                        Use `_` symbol to separate multiple-word names
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <label for="field-type-1"><h5>Field type</h5></label>
+                    <select class="form-control form-control-lg" id="field-type-1" name="field-type-1" required>
+                        <option>Long Text</option>
+                        <option>Text</option>
+                        <option>Float</option>
+                        <option>Integer</option>
+                        <option>Boolean</option>
+                        <option>Date</option>
+                        Check for table or columns name conventions </select>
+                </div>
+                <div class="col-sm remove-button">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="removeFieldRow(event)"
+                            id="row-remove-button-1">Remove</button>
+                </div>
+            </div>
+        </div>
+
+        <input type="submit" value="Create new Table" class="btn btn-primary btn-lg">
+
+        {% if data['success-span'] %}
+        <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Table was created" id="success-span">
+      <button type="button" class="btn btn-outline-success" style="font-size: 14px;" disabled>Success!</button>
+    </span>
+        {% elif data['success-span'] == None %}
+
+        {% else %}
+        <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Table was created" id="fail-span">
+            <button type="button" class="btn btn-danger" disabled>Failed</button>
+        </span>
+        <div class="form-text">
+            Check for table or columns name conventions
+        </div>
+
+        {% endif %}
+    </form>
+</div>
+<div class="container">
+    <form action="{{ url_for('uploader') }}" method="POST"
+          enctype="multipart/form-data">
+        <label class="form-label" for="customFile">Or create table from .tsv, .csv file</label>
+        <input type="file" class="form-control" id="customFile" name="file" style="width: 420px;"/>
+        <br>
+        <input type="submit" value="Apply" class="btn btn-primary"/>
+    </form>
+</div>
+{% endblock %}

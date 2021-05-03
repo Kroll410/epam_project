@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %} Table {% endblock %}
+
+
+{% block header %}
+<li class="nav-item active">
+</li>
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container row">
+    <div class="col-sm">
+        <h1>{{ data['name'] }}</h1>
+    </div>
+
+    <div class="col-sm" style="">
+        <button type="button" class="btn btn-primary btn-sm" style="float: right; margin-left: 10px;">Remove</button>
+        <button type="button" class="btn btn-primary btn-sm" style="float: right;" onclick="addDataRow()">Add row
+        </button>
+    </div>
+
+</div>
+
+
+<br>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        {% for field_name in data['fields'] %}
+        <th scope="col">{{ field_name }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+
+    {% for row in data['table_data'] %}
+    <tr>
+        {% for el in row %}
+        <th scope="col">{{ el }}</th>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+
+    <form method="POST">
+        <div id="new-data-row">
+            <tr id="data-row">
+                {% for idx in range(data['amount_of_fields']) %}
+                {% if idx == 0 or idx == data['amount_of_fields'] - 1 %}
+                <th scope="col"></th>
+                {% else %}
+                <th scope="col">
+                    <input class="form-control form-control-sm add-new-row" type="text">
+                </th>
+                {% endif %}
+                {% endfor %}
+            </tr>
+        </div>
+    </form>
+    </tbody>
+</table>
+
+{% endblock %}

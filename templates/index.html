@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %} Main Page {% endblock %}
+
+{% block content %}
+
+
+<div class="jumbotron push-down-containers">
+    <h1 class="display-4">Hello, world!</h1>
+    <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to
+        featured content or information.</p>
+    <hr class="my-4">
+
+    <h3>Search for table</h3>
+
+    <div class="container input-group push-down-containers">
+        <div class="input-group" style="width: 500px;">
+            <input type="search" class="form-control rounded" placeholder="Type table name" aria-label="Search"
+                   aria-describedby="search-addon"/>
+            <button type="button" class="btn btn-outline-primary">Go</button>
+        </div>
+    </div>
+
+</div>
+
+<h3>or see already created tables</h3>
+
+<div class="container push-down-containers">
+    <p class="lead">
+        <a class="btn btn-primary btn-lg" href="{{ url_for('show_all_tables') }}" role="button">See available tables</a>
+    </p>
+</div>
+
+<h3>or create a new one!</h3>
+
+<div class="container push-down-containers">
+    <p class="lead">
+        <a class="btn btn-primary btn-lg" href="{{ url_for( 'add_new_table' ) }}" role="button">Create new tables</a>
+    </p>
+</div>
+
+{% endblock %}
