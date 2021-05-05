@@ -9,16 +9,13 @@
 </head>
 <body>
 <div class="push-down-containers">
-    <nav class="navbar navbar-light bg-light "
-         style="background-color: #e3f2fd;">
+    <nav class=" container navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">Home</a>
-        </div>
-        <ul class="navbar-nav mr-auto">
+
             {% block header %}
             {% endblock %}
-        </ul>
-
+        </div>
     </nav>
 </div>
 <div class="container">

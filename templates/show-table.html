@@ -4,62 +4,76 @@
 
 
 {% block header %}
-<li class="nav-item active">
-</li>
+<div class="collapse navbar-collapse" id="navbarNavAltMarkup" style="margin-left: 50px;">
+    <div class="navbar-nav">
+        <a class="nav-item nav-link active" href="{{ url_for('show_all_tables') }}">Back to all tables</a>
+
+    </div>
+</div>
 {% endblock %}
 
 {% block content %}
 
-
-<div class="container row">
-    <div class="col-sm">
-        <h1>{{ data['name'] }}</h1>
-    </div>
-
-    <div class="col-sm" style="">
-        <button type="button" class="btn btn-primary btn-sm" style="float: right; margin-left: 10px;">Remove</button>
-        <button type="button" class="btn btn-primary btn-sm" style="float: right;" onclick="addDataRow()">Add row
-        </button>
-    </div>
-
-</div>
-
-
-<br>
-<table class="table table-striped">
-    <thead>
-    <tr>
-        {% for field_name in data['fields'] %}
-        <th scope="col">{{ field_name }}</th>
-        {% endfor %}
-    </tr>
-    </thead>
-    <tbody>
-
-    {% for row in data['table_data'] %}
-    <tr>
-        {% for el in row %}
-        <th scope="col">{{ el }}</th>
-        {% endfor %}
-    </tr>
-    {% endfor %}
-
-    <form method="POST">
-        <div id="new-data-row">
-            <tr id="data-row">
-                {% for idx in range(data['amount_of_fields']) %}
-                {% if idx == 0 or idx == data['amount_of_fields'] - 1 %}
-                <th scope="col"></th>
-                {% else %}
-                <th scope="col">
-                    <input class="form-control form-control-sm add-new-row" type="text">
-                </th>
-                {% endif %}
-                {% endfor %}
-            </tr>
+<form method="post" action="{{ data['name'] }}">
+    <div class="container">
+        <div class="col-sm" style="display: flex;">
+            <h1>{{ data['name'] }}</h1>
+            <span style="display: inline-block; padding: 5px;">
+               <button type="submit" value="Apply changes" class="btn btn-primary" style="margin-left: 20px;">Apply changes</button>
+           </span>
         </div>
-    </form>
-    </tbody>
-</table>
 
+        <div class="col-sm" style="">
+            <button type="button" class="btn btn-primary btn-sm" style="float: right; margin-left: 10px;">Remove
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" style="float: right;">Add row
+            </button>
+        </div>
+
+    </div>
+
+    <br>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            {% for field_name in data['fields'] %}
+            <th scope="col">{{ field_name }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for row in data['table_data'] %}
+        <tr>
+            {% for el in row %}
+            <th scope="col">{{ el }}</th>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+
+
+        <div class="row">
+            <div id="new-data-row">
+                <tr id="data-row-1">
+                    {% for idx in range(data['amount_of_fields']) %}
+                    {% if idx == 0 or idx == data['amount_of_fields'] - 1 %}
+                    <th scope="col"></th>
+                    {% else %}
+                    <th scope="col">
+                        <input class="form-control form-control-sm add-new-row" type="text" id="data-{{ idx }}"
+                               name="{{ data['fields'][idx] }}">
+                    </th>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+            </div>
+
+        </div>
+
+        </tbody>
+    </table>
+    {% if 'DATE()' in data['table_types'] %}
+    <h6 style="font-size: 14px;">Note: date type should be type in format `MM-DD-YYYY`</h6>
+    {% endif %}
+</form>
 {% endblock %}

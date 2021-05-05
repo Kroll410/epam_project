@@ -1,14 +1,27 @@
 from init import db
 from inspect import getmembers
 
+TYPES = {
+    'Long Text': db.Column(db.String(255)),
+    'Text': db.Column(db.String(45)),
+    'Float': db.Column(db.Float()),
+    'Integer': db.Column(db.Integer()),
+    'Boolean': db.Column(db.Boolean()),
+    'DATE': db.Column(db.Date()),
+}
 
-def class_factory(_metadata: dict, base=db.Model):
+
+def class_factory(_metadata: dict, base=db.Model, with_id=True):
+
     _metadata = dict(_metadata)
+    print(_metadata)
     table_name = _metadata.pop('table-name')
 
-    f_class_attributes = {
-        'id': db.Column(db.Integer, primary_key=True)
-    }
+    f_class_attributes = {}
+    if with_id:
+        f_class_attributes.update({
+            'id': db.Column(db.Integer, primary_key=True)
+        })
 
     prev_pair = None
     for i, f_pair in enumerate(_metadata.items()):
@@ -19,20 +32,10 @@ def class_factory(_metadata: dict, base=db.Model):
         _, val = prev_pair
         _, val_type = f_pair
 
-        if val_type == 'Long Text':
-            datatype = db.Column(db.String(255))
-        elif val_type == 'Text':
-            datatype = db.Column(db.String(45))
-        elif val_type == 'Float':
-            datatype = db.Column(db.Float())
-        elif val_type == 'Integer':
-            datatype = db.Column(db.Integer())
-        elif val_type == 'Boolean':
-            datatype = db.Column(db.Boolean())
-        elif val_type == 'Date':
-            datatype = db.Column(db.Date())
-        else:
-            raise ValueError
+        try:
+            datatype = TYPES[val_type]
+        except KeyError:
+            raise KeyError('Invalid data was entered')
 
         f_class_attributes.update({
             val: datatype
@@ -56,9 +59,6 @@ def class_factory(_metadata: dict, base=db.Model):
 
     def __repr__(self):
         return f'{self.__tablename__}'
-
-    def to_dict(self):
-        pass
 
     new_class = type(table_name, (base,), dict({
         "__init__": __init__,

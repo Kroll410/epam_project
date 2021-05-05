@@ -15,8 +15,6 @@ function addFieldRow(){
                 <label for="field-name-${FIELD_ID_COUNT}"><h5>Field name</h5></label>
                 <input class="form-control form-control-lg " type="text" id="field-name-${FIELD_ID_COUNT}" name="field-name-${FIELD_ID_COUNT}" required>
                 <div class="form-text">
-                    Note: date type should be type in format 'MM-DD-YYYY'
-                    <br>
                     Use '_' symbol to separate multiple-word names
                 </div>
             </div>
@@ -52,31 +50,3 @@ function removeFieldRow(e){
   document.getElementById(`row-${id}`).remove();
 }
 
-
-const data_row_container = document.getElementById('new-data-row')
-let ROW_ID_COUNT = 1
-
-function addDataRow(){
-  const tr = document.createElement('tr');
-  ROW_ID_COUNT = ROW_ID_COUNT + 1;
-
-  tr.classList.add('row');
-  tr.innerHTML =
-  `
-   <tr id="data-row-${ROW_ID_COUNT}">
-        <form method="POST">
-            {% for idx in range(data['amount_of_fields']) %}
-            {% if idx == 0 or idx == data['amount_of_fields'] - 1 %}
-            <th scope="col"></th>
-            {% else %}
-            <th scope="col">
-                <input class="form-control form-control-sm add-new-row" type="text">
-            </th>
-            {% endif %}
-            {% endfor %}
-        </form>
-    </tr>
-    `;
-    data_row_container.appendChild(tr);
-    console.log('kek')
-}

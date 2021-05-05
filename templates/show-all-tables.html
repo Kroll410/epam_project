@@ -11,15 +11,16 @@
     <hr class="my-4">
 </div>
 
-
 <div class="container tables-preview">
     {% for idx, table_info in data['info'] %}
 
     <div class="card" id="{{ table_info[0] }}" style="width: 22rem;">
         <div class="card-body">
             <div class="table-name-with-delete-button">
-                <a href="{{ table_info[0] }}"><h5 class="card-title">{{ table_info[0] }}</h5></a>
-                <button type="button" class="btn btn-primary btn-sm" style="font-size: 14px;">Drop</button>
+                <a href="tables/{{ table_info[0] }}"><h5 class="card-title">{{ table_info[0] }}</h5></a>
+                <form action="tables/{{ table_info[0] }}/delete" method="POST">
+                    <input type="submit" class="btn btn-outline-primary" value="Drop">
+                </form>
             </div>
             <p class="card-text">
                 Fields:

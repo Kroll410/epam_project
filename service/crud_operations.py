@@ -3,9 +3,7 @@ from models.meta_models import class_factory
 from werkzeug.datastructures import ImmutableDict
 from init import db
 from config import Config
-from init import pd
 import uuid
-
 
 con = db.create_engine(Config.SQLALCHEMY_DATABASE_URI, {})
 meta = MetaData(bind=con)
@@ -17,9 +15,27 @@ def create_table(table_data: ImmutableDict) -> None:
     print(f'Table `{MetaTableClass.__tablename__}` was created')
 
 
-def create_table_by(file):
+def create_table_by(file, f_type):
+    if f_type == 'csv':
+        f_type = ','
+    elif f_type == 'tsv':
+        f_type = '\t'
+    else:
+        raise ValueError
+
+    file_data = file.read().decode('utf-8')
     table_name = file.filename.split('.')[0]
-    df = pd.read_csv(file)
+
+    fields = [x.strip('\'\" ') for x in file_data.split('\n')[0].split('{}'.format(f_type))]
+    rows = [[y.strip('\'\" ') for y in x.split('{}'.format(f_type))] for x in file_data.split('\n')[1:]]
+
+    table_field_types = {
+        k: None for k in fields
+    }
+
+    # for f_idx in range(len(fields)):
+    #     for row in rows:
+
 
 
 def get_all_tables_info() -> dict:
@@ -35,10 +51,18 @@ def get_all_tables_info() -> dict:
     return data
 
 
-def insert_into_table(table_name):
+def insert_into_table(data, table_name):
     table = Table(table_name, meta, autoload_with=con)
-    # ins = table.insert().values(A='Example', uuid=uuid.uuid4())
-    print(db.session.query(table).all())
-    # con.execute(ins)
+    data = dict(data)
+    data.update({
+        'uuid': str(uuid.uuid4())
+    })
+    ins = table.insert()
+    print(data)
+    con.execute(ins, data)
 
-insert_into_table('A')
+
+def delete_table_from_db(table_name):
+    print(table_name)
+    table = Table(table_name, meta, autoload_with=con)
+    table.drop(con)
