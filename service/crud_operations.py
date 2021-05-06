@@ -1,6 +1,5 @@
 from sqlalchemy import MetaData, Table
 from models.meta_models import class_factory
-from werkzeug.datastructures import ImmutableDict
 from init import db
 from config import Config
 import uuid
@@ -9,33 +8,55 @@ con = db.create_engine(Config.SQLALCHEMY_DATABASE_URI, {})
 meta = MetaData(bind=con)
 
 
-def create_table(table_data: ImmutableDict) -> None:
+def create_table(table_data) -> None:
     MetaTableClass = class_factory(table_data)
     MetaTableClass.__table__.create(bind=con)
     print(f'Table `{MetaTableClass.__tablename__}` was created')
 
 
 def create_table_by(file, f_type):
-    if f_type == 'csv':
-        f_type = ','
-    elif f_type == 'tsv':
-        f_type = '\t'
-    else:
-        raise ValueError
-
-    file_data = file.read().decode('utf-8')
-    table_name = file.filename.split('.')[0]
-
-    fields = [x.strip('\'\" ') for x in file_data.split('\n')[0].split('{}'.format(f_type))]
-    rows = [[y.strip('\'\" ') for y in x.split('{}'.format(f_type))] for x in file_data.split('\n')[1:]]
-
-    table_field_types = {
-        k: None for k in fields
+    types = {
+        'csv': ',',
+        'tsv': '\t',
     }
 
-    # for f_idx in range(len(fields)):
-    #     for row in rows:
+    def column_type(column):
+        for val in column:
+            try:
+                float(val)
+                if '.' in val:
+                    return 'Float'
+                else:
+                    return 'Integer'
+            except ValueError:
+                return 'Text'
+        return 'Text'
 
+    table_name = file.filename.split('.')[0]
+
+    file = file.read().decode('utf-8').split('\n')
+    table_fields_raw, rows = file[0], [[y.strip(' \'\"') for y in x.split(f'{types[f_type]}')] for x in file[1:-1]]
+    fields = [str(x.strip(' \t\n\'\"')) for x in table_fields_raw.split(f'{types[f_type]}')]
+
+    table_meta = [
+        ('table-name', table_name)
+    ]
+    for idx, col in enumerate(zip(*rows)):
+        table_meta.extend([
+            (f'field-name-{idx + 1}', fields[idx]),
+            (f'field-type-{idx + 1}', column_type(col))
+        ])
+
+    create_table(table_meta)
+    try:
+
+        for i in range(len(rows)):
+            data = []
+            for j in range(len(fields)):
+                data.append((fields[j], rows[i][j]))
+            insert_into_table(data, table_name)
+    except:
+        delete_table_from_db(table_name)
 
 
 def get_all_tables_info() -> dict:
@@ -58,7 +79,6 @@ def insert_into_table(data, table_name):
         'uuid': str(uuid.uuid4())
     })
     ins = table.insert()
-    print(data)
     con.execute(ins, data)
 
 
@@ -66,3 +86,4 @@ def delete_table_from_db(table_name):
     print(table_name)
     table = Table(table_name, meta, autoload_with=con)
     table.drop(con)
+    db.metadata.clear()

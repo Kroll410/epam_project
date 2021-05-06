@@ -2,7 +2,7 @@ from werkzeug.utils import redirect
 
 from init import app
 from flask import render_template, request
-from helpers.validation import validate_table, validate_file_type
+from helpers.validation import validate_table, validate_file_type, _is_already_exists
 from service.crud_operations import create_table, get_all_tables_info, create_table_by, delete_table_from_db
 
 
@@ -38,13 +38,17 @@ def uploader():
         return redirect('/tables')
 
     if request.method == 'POST':
+        if not request.files['file'].filename:
+            return render_template(f'add-new-table.html', data={'success-span': False})
+
         f = request.files['file']
         is_success_validation, f_type = validate_file_type(f)
-        if is_success_validation:
+        name = f.filename.split('.')[0]
+        if is_success_validation and not _is_already_exists(name):
             create_table_by(file=f, f_type=f_type)
+            return redirect(f'/tables/{name}')
 
-        return redirect('/add_new_table')
-        # return render_template(f'add-new-table.html', data={'success-span': is_success_validation})
+        return render_template(f'add-new-table.html', data={'success-span': False})
 
 
 @app.route('/tables/<table_name>/delete', methods=["POST"])

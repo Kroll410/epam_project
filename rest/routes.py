@@ -32,7 +32,6 @@ class TableApi(Resource):
         table = Table(table_name, meta, autoload_with=con)
 
         is_success_validation = True if validate_user_inputs(table, request.form) else False
-
         if is_success_validation:
             insert_into_table(request.form, table_name)
 
